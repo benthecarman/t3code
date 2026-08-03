@@ -133,6 +133,32 @@ describe("mobile model options", () => {
     expect(option?.selection.options).toEqual([{ id: "serviceTier", value: "default" }]);
   });
 
+  it("labels a kimi provider without a display name as Kimi", () => {
+    const config = {
+      providers: [
+        {
+          instanceId: "kimi",
+          driver: "kimi",
+          enabled: true,
+          installed: true,
+          auth: { status: "authenticated" },
+          models: [
+            {
+              slug: "kimi-k3",
+              name: "Kimi K3",
+              isCustom: false,
+              capabilities: null,
+            },
+          ],
+        },
+      ],
+    } as unknown as ServerConfig;
+
+    const [group] = groupByProvider(buildModelOptions(config, null));
+
+    expect(group?.providerLabel).toBe("Kimi");
+  });
+
   it("rejects stored selections whose provider is not usable", () => {
     const config = {
       providers: [

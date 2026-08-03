@@ -44,5 +44,8 @@ with prompting enabled and a restricted workspace while **Full access** disables
 labels above describe what you get; the exact per-provider translation is internal and may
 change.
 
+For Kimi, plan mode maps to `plan`, the default mode maps to `approval-required`, and auto or
+yolo maps to `full-access`.
+
 Mobile offers the same four modes. It labels the first one **Approve actions** rather than
 **Supervised**.

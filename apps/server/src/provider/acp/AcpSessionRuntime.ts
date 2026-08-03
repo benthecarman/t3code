@@ -70,6 +70,13 @@ export interface AcpSessionRuntimeOptions {
   };
   readonly authMethodId: string;
   readonly mcpServers?: ReadonlyArray<EffectAcpSchema.McpServer>;
+  /**
+   * Grace period before a spawned agent that ignores SIGTERM is SIGKILLed on
+   * scope close. Forwarded to `ChildProcess.make`. Leave unset for agents
+   * that exit on SIGTERM; set it for agents that don't (e.g. Kimi) or scope
+   * close will wait for the child exit forever.
+   */
+  readonly forceKillAfter?: Duration.Input;
   readonly requestLogger?: (event: AcpSessionRequestLogEvent) => Effect.Effect<void, never>;
   readonly protocolLogging?: {
     readonly logIncoming?: boolean;
@@ -339,6 +346,9 @@ export const make = (
         ChildProcess.make(spawnCommand.command, spawnCommand.args, {
           ...(options.spawn.cwd ? { cwd: options.spawn.cwd } : {}),
           ...(options.spawn.env ? { env: options.spawn.env, extendEnv: true } : {}),
+          ...(options.forceKillAfter !== undefined
+            ? { forceKillAfter: options.forceKillAfter }
+            : {}),
           shell: spawnCommand.shell,
         }),
       )
